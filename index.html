@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>春源鋼鐵 移工管理QA數位急救包</title>
+    <style>
+        :root {
+            --primary-color: #1a365d; /* 春源鋼鐵深藍 */
+            --secondary-color: #f0f4f8;
+            --text-color: #2d3748;
+            --accent-color: #e65c00; /* 安全橘 */
+            --border-color: #cbd5e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f7fafc;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 25px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-top: 6px solid var(--primary-color);
+        }
+
+        .header-zone {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        /* 搜尋框與篩選按鈕 */
+        .search-box {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-box:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.1);
+        }
+
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: 1px solid #e2e8f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* QA 摺疊結構 */
+        .faq-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            background: #fff;
+            transition: box-shadow 0.2s;
+        }
+
+        .faq-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .faq-question {
+            padding: 16px;
+            background-color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .faq-question:hover {
+            background-color: #f7fafc;
+        }
+
+        .faq-question::after {
+            content: '▼';
+            font-size: 0.75rem;
+            color: #a0aec0;
+            transition: transform 0.2s;
+        }
+
+        .faq-item.active .faq-question::after {
+            transform: rotate(180deg);
+            color: var(--primary-color);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.25s ease-out;
+            background-color: #fcfdfd;
+            border-top: 0 solid var(--border-color);
+        }
+
+        .faq-item.active .faq-answer {
+            border-top: 1px solid #edf2f7;
+            max-height: 1200px;
+        }
+
+        .answer-content {
+            padding: 18px;
+            font-size: 0.95rem;
+        }
+
+        /* 標籤樣式 */
+        .badge {
+            display: inline-block;
+            background: #edf2f7;
+            color: var(--primary-color);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            margin-right: 5px;
+        }
+
+        .badge-alert {
+            background: #fff0f0;
+            color: var(--accent-color);
+        }
+
+        .btn-call {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 8px 14px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 14px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 10px;
+            margin-left: 5px;
+        }
+
+        ol, ul {
+            padding-left: 22px;
+            margin-top: 5px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+        
+        b {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-zone">
+        <h1>春源鋼鐵 移工管理QA</h1>
+        <div class="subtitle">第一線主管與管理同仁的數位急救包 🚑</div>
+    </div>
+
+    <!-- 搜尋與篩選 -->
+    <input type="text" id="searchInput" class="search-box" placeholder="🔍 輸入關鍵字或標籤搜尋（如：請假、失聯、續聘）...">
+    
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="filterCategory('all')">全部常見問題</button>
+        <button class="filter-btn" onclick="filterCategory('leave')">請假與返鄉</button>
+        <button class="filter-btn" onclick="filterCategory('work')">加班與續聘</button>
+        <button class="filter-btn" onclick="filterCategory('crisis')">失聯應變</button>
+        <button class="filter-btn" onclick="filterCategory('health')">體檢與中階</button>
+    </div>
+
+    <!-- QA 內容列表 -->
+    <div id="faqList">
+
+        <!-- 請假 -->
+        <div class="faq-item" data-category="leave">
+            <div class="faq-question">Q1. 移工請假（病假/事假）的扣薪與證明規定為何？</div>
+            <div class="faq-answer">
+                <div class="answer-content">
+                    <span class="badge">#請假</span><span class="badge">勞基法規範</span>
+                    <p>移工請假比照本國籍員工（勞基法）：</p>
+                    <ul>
+                        <li><b>病假：</b> 一年內未超過 30 日部分，<b>折半發給工資</b>。請病假需檢附合法醫療機構之診斷證明或收據。</li>
+                        <li><b>事假：</b> 一年內合計不得超過 14 日，<b>事假期間不給工資</b>。</li>
+                        <li><b>重要提醒：</b> 廠區主管不可無故拒絕正當請假，但若移工未完成請假手續且無正當理由缺席，將構成曠職。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 返鄉 -->
+        <div class="faq-item" data-category="leave">
+            <div class="faq-question">Q2. 移工想要「返鄉探親」，主管與廠區行政流程怎麼辦？</div>
+            <div class="faq-answer">
+                <div class="answer-content">
+                    <span class="badge">#返鄉</span><span class="badge">請假出境</span>
+                    <ol>
+                        <li><b>排休確認：</b> 依就業服務法規定，移工聘僱期滿前想返鄉，雇主應予同意。主管需確認其特別休假天數，或協調事假期間，避免影響廠區產能。</li>
+                        <li><b>填寫假單：</b> 由雙方合意簽署返鄉假單，明確紀錄出境與「預計返台日期」。</li>
+                        <li><b>通知配合仲介：</b> 由總務/HR對接仲介辦理移民署「重入境許可」（現行多合一居留證多已內建，但仍需確認效期），並安排購票與返台接機。</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- 加班 -->
+        <div class="faq-item" data-category="work">
+            <div class="faq-question">Q3. 移工的「加班費」如何計算？如果移工拒絕加班怎麼處理？</div>
+            <div class="faq-answer">
+                <div class="answer-content">
+                    <span class="badge">#加班</span><span class="badge">薪資計算</span>
+                    <ul>
+                        <li><b>計算公式：</b> 延長工時前 2 小時依時薪 × 1.34；第 3-4 小時依時薪 × 1.67。團隊輪班或假日出勤依勞基法與公司規範核算。</li>
+                        <li><b>意願原則：</b> 加班必須徵得「員工本人同意」。若移工因體力或信仰因素不願加班，不可強迫或進行懲罰性扣款。</li>
+                        <li><b>實務建議：</b> 主管可透過配合仲介或雙語雙向溝通，了解拒絕原因，或調整廠內調度。</li>
+                    </ul>
+                    <a href="https://calc.mol.gov.tw/pwa/" target="_blank" class="btn-link">🔗 勞動部加班費試算系統</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 失聯 -->
+        <div class="faq-item" data-category="crisis">
+            <div class="faq-question">Q4. 移工無故未到班且聯繫不上（疑似失聯），第一時間該怎麼做？</div>
+            <div class="faq-answer">
+                <div class="answer-content">
+                    <span class="badge badge-alert">#失聯</span><span class="badge badge-alert">🚨 緊急應變</span>
+                    <ol>
+                        <li><b>即時查找：</b> 廠區主管立即通知總務、宿管與配合仲介，前往宿舍確認行李是否搬空，並撥打電話、透過同鄉社群聯繫。</li>
+                        <li><b>通報時效：</b> 依規定移工<b>「連續曠職 3 日且失去聯繫」</b>，雇主須於 3 日內（即第 4 到第 6 日間）向勞動部、當地勞工局及移民署專勤隊辦理通報。</li>
+                        <li><b>職災特例：</b> 若疑似因廠區意外失蹤，則不適用失聯通報，應立刻循職災/意外報案流程辦理。</li>
+                    </ol>
+                    <a href="tel:1955" class="btn-call">📞 直撥 1955 諮詢專線</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 續聘 -->
+        <div class="faq-item" data-category="work">
+            <div class="faq-question">Q5. 移工合約即將期滿，廠區想要「續聘」的作業時間與流程？</div>
+            <div class="faq-answer">
+                <div class="answer-content">
+                    <span class="badge">#續聘</span><span class="badge">合約留用</span>
+                    <ul>
+                        <li><b>評估意願：</b> 主管應於移工聘僱期滿前 <b>4 到 6 個月</b>，評估其工作表現，並由雙語人員協助確認移工留台續聘意願。</li>
+                        <li><b>行政辦理：</b> 確認續聘後，由總務/HR協同仲介，於期滿前 2 至 4 個月內向勞動部申請期滿續聘許可。</li>
+                        <li><b>優點：</b> 期滿期內直接轉聘，移工無需出境，廠區生產力不中斷，且免除重新訓練的成本。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 轉任中階 -->
+        <div class="faq-item" data-category="health">
+            <div class="faq-question">Q6. 什麼是「轉任中階技術人力」？需要符合哪些條件？</div>
+            <div class="faq-answer">
+                <div class="answer-content">
+                    <span class="badge">#轉任中階</span><span class="badge">留才計畫</span>
+                    <p>優秀移工轉任「中階技術工」後，<b>在台工作將無年限限制</b>，且不佔原本的移工名額：</p>
+                    <ul>
+                        <li><b>資歷條件：</b> 在台連續工作滿 6 年以上，或總計工作達 11.5 年。</li>
+                        <li><b>薪資門檻：</b> 製造業經常性薪資達（或以上）每月 <b>NT$33,000</b>，或年總薪資達 <b>NT$500,000</b> 以上。</li>
+                        <li><b>技術證明：</b> 需具備專業證照、接受特別訓練課程，或由春源鋼鐵出具實務專長證明（薪資達 3.5 萬可免技術評估）。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 體檢 -->
+        <div class="faq-item" data-category="health">
+            <div class="faq-question">Q7. 移工的「定期體檢」時程為何？如果體檢不合格怎麼辦？</div>
+            <div class="faq-answer">
+                <div class="answer-content">
+                    <span class="badge">#體檢</span><span class="badge">衛生法規</span>
+                    <ul>
+                        <li><b>定期體檢時程：</b> 移工入境後 <b>滿 6 個月、18 個月及 30 個月</b> 前後 30 日內，須安排至指定醫院進行健檢。</li>
+                        <li><b>不合格急救：</b> 收到健檢不合格報告次日起 <b>30 日內</b>，須帶移工至指定醫院辦理「複檢」。</li>
+                        <li><b>函報備查：</b> 複檢完成後，需將報告函報地方衛生局備查。若複檢仍不合格（或未按時複檢），勞動部將廢止聘僱許可。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // 1. 摺疊面板點擊展開/收合
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+        
+        question.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+            
+            // 收合所有其他 QA
+            faqItems.forEach(i => {
+                i.classList.remove('active');
+                i.querySelector('.faq-answer').style.maxHeight = null;
+            });
+            
+            if (!isActive) {
+                item.classList.add('active');
+                answer.style.maxHeight = answer.scrollHeight + "px";
+            } else {
+                item.classList.remove('active');
+                answer.style.maxHeight = null;
+            }
+        });
+    });
+
+    // 2. 關鍵字與標籤搜尋功能
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', function() {
+        const filterText = this.value.toLowerCase();
+        
+        faqItems.forEach(item => {
+            const questionText = item.querySelector('.faq-question').textContent.toLowerCase();
+            const answerText = item.querySelector('.answer-content').textContent.toLowerCase();
+            
+            if (questionText.includes(filterText) || answerText.includes(filterText)) {
+                item.style.display = "";
+            } else {
+                item.style.display = "none";
+                item.classList.remove('active');
+                item.querySelector('.faq-answer').style.maxHeight = null;
+            }
+        });
+    });
+
+    // 3. 分類標籤篩選功能
+    function filterCategory(category) {
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        searchInput.value = "";
+
+        faqItems.forEach(item => {
+            if (category === 'all' || item.getAttribute('data-category') === category) {
+                item.style.display = "";
+            } else {
+                item.style.display = "none";
+                item.classList.remove('active');
+                item.querySelector('.faq-answer').style.maxHeight = null;
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
